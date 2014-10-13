@@ -7,6 +7,7 @@
  */
 
 //Viki's comment
+//2nd comment
 
 class Stock {
 
