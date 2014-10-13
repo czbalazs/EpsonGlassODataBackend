@@ -6,6 +6,8 @@
  * Time: 16:26
  */
 
+//Viki's comment
+
 class Stock {
 
     public $StockID;
