@@ -8,6 +8,7 @@
 
 //Viki's comment
 //2nd comment
+//Hi!
 
 class Stock {
 
