@@ -118,25 +118,44 @@ class CreateFictiveCompanyMetadata {
         $customerEntityType = $metadata->addEntityType(new ReflectionClass('Customer'), 'Customer', 'FictiveCompany');
         $metadata->addKeyProperty($customerEntityType, 'CustomerID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($customerEntityType, 'Address', EdmPrimitiveType::STRING);
-        $customerResourceSet = $metadata->addResourceSet('Customers', $customerEntityType);
+        $customersResourceSet = $metadata->addResourceSet('Customers', $customerEntityType);
 
         $supplierEntityType = $metadata->addEntityType(new ReflectionClass('Supplier'), 'Supplier', 'FictiveCompany');
         $metadata->addKeyProperty($supplierEntityType, 'SupplierID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($supplierEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($supplierEntityType, 'Phone', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($supplierEntityType, 'ContactName', EdmPrimitiveType::STRING);
-        $supplierResourceSet = $metadata->addResourceSet('Suppliers', $supplierEntityType);
+        $suppliersResourceSet = $metadata->addResourceSet('Suppliers', $supplierEntityType);
 
 
         /*
          * Defining relationships
          */
-        //TODO!!
-        $metadata->addResourceSetReferenceProperty($stockEntityType, 'Item', $itemsResourceSet);
+        //Stock(1)<=>Item(0-*)
+        $metadata->addResourceSetReferenceProperty($stockEntityType, 'Items', $itemsResourceSet);
         $metadata->addResourceReferenceProperty($itemEntityType, 'Stock', $stocksResourceSet);
 
-        $metadata->addResourceSetReferenceProperty($reloadEntityType, 'Item', $itemsResourceSet);
+        //Reload(1)<=>Item(0-*)
+        $metadata->addResourceSetReferenceProperty($reloadEntityType, 'Items', $itemsResourceSet);
         $metadata->addResourceReferenceProperty($itemEntityType, 'Reload', $reloadsResourceSet);
+
+        //Order(1)<=>Item(0-*)
+        $metadata->addResourceSetReferenceProperty($orderEntityType, 'Items', $itemsResourceSet);
+        $metadata->addResourceReferenceProperty($itemEntityType, 'Order', $ordersResourceSet);
+
+        //User(1)<=>Order(0-*)
+        $metadata->addResourceSetReferenceProperty($userEntityType, 'Orders', $ordersResourceSet);
+        $metadata->addResourceReferenceProperty($orderEntityType, 'User', $usersResourceSet);
+
+        //Customer(1)<=>Order(0-*)
+        $metadata->addResourceSetReferenceProperty($customerEntityType, 'Orders', $ordersResourceSet);
+        $metadata->addResourceReferenceProperty($orderEntityType, 'Customer', $customersResourceSet);
+
+        //Supplier(1)<=>Reload(0-*)
+        $metadata->addResourceSetReferenceProperty($supplierEntityType, 'Reloads', $reloadsResourceSet);
+        $metadata->addResourceReferenceProperty($reloadEntityType, 'Supplier', $suppliersResourceSet);
+
+
 
 
 
