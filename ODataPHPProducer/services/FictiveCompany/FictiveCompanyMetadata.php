@@ -115,6 +115,18 @@ class CreateFictiveCompanyMetadata {
         $metadata->addPrimitiveProperty($userEntityType, 'Privilege', EdmPrimitiveType::STRING);
         $usersResourceSet = $metadata->addResourceSet('Users', $userEntityType);
 
+        $customerEntityType = $metadata->addEntityType(new ReflectionClass('Customer'), 'Customer', 'FictiveCompany');
+        $metadata->addKeyProperty($customerEntityType, 'CustomerID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveProperty($customerEntityType, 'Address', EdmPrimitiveType::STRING);
+        $customerResourceSet = $metadata->addResourceSet('Customers', $customerEntityType);
+
+        $supplierEntityType = $metadata->addEntityType(new ReflectionClass('Supplier'), 'Supplier', 'FictiveCompany');
+        $metadata->addKeyProperty($supplierEntityType, 'SupplierID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveProperty($supplierEntityType, 'ProductID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveProperty($supplierEntityType, 'Phone', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($supplierEntityType, 'ContactName', EdmPrimitiveType::STRING);
+        $supplierResourceSet = $metadata->addResourceSet('Suppliers', $supplierEntityType);
+
 
         /*
          * Defining relationships
