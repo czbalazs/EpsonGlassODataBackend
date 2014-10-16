@@ -82,12 +82,12 @@ class CreateFictiveCompanyMetadata {
 
         $stockEntityType = $metadata->addEntityType(new ReflectionClass('Stock'), 'Stock', 'FictiveCompany');
         $metadata->addKeyProperty($stockEntityType, 'StockID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveProperty($stockEntityType, 'ProductID', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($stockEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($stockEntityType, 'Quantity', EdmPrimitiveType::INT32);
         $stocksResourceSet = $metadata->addResourceSet('Stocks', $stockEntityType);
 
         $itemEntityType = $metadata->addEntityType(new ReflectionClass('Item'), 'Item', 'FictiveCompany');
-        $metadata->addKeyProperty($itemEntityType, 'ItemID', EdmPrimitiveType::STRING);
+        $metadata->addKeyProperty($itemEntityType, 'ItemID', EdmPrimitiveType::INT+"");
         $metadata->addPrimitiveProperty($itemEntityType, 'Barcode', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($itemEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($itemEntityType, 'Description', EdmPrimitiveType::STRING);
@@ -95,11 +95,26 @@ class CreateFictiveCompanyMetadata {
 
         $reloadEntityType = $metadata->addEntityType(new ReflectionClass('Reload'), 'Reload', 'FictiveCompany');
         $metadata->addKeyProperty($reloadEntityType, 'ReloadID', EdmPrimitiveType::INT32);
-        $metadata->addPrimitiveType($reloadEntityType, 'ProductID', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveType($reloadEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveType($reloadEntityType, 'SupplierID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveType($reloadEntityType, 'Quantity', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveType($reloadEntityType, 'Date', EdmPrimitiveType::STRING);
         $reloadsResourceSet = $metadata->addResourceSet('Reloads', $reloadEntityType);
+
+        $orderEntityType = $metadata->addEntityType(new ReflectionClass('Order'), 'Order', 'FictiveCompany');
+        $metadata->addKeyProperty($orderEntityType, 'OrderID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($orderEntityType, 'ProductID', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveType($orderEntityType, 'CustomerID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($orderEntityType, 'Quantity', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($orderEntityType, 'Date', EdmPrimitiveType::STRING);
+        $ordersResourceSet = $metadata->addResourceSet('Orders', $orderEntityType);
+
+        $userEntityType = $metadata->addEntityType(new ReflectionClass('User'), 'User', 'FictiveCompany');
+        $metadata->addKeyProperty($userEntityType, 'UserID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveProperty($userEntityType, 'Name', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($userEntityType, 'Privilege', EdmPrimitiveType::STRING);
+        $usersResourceSet = $metadata->addResourceSet('Users', $userEntityType);
+
 
         /*
          * Defining relationships
@@ -108,7 +123,8 @@ class CreateFictiveCompanyMetadata {
         $metadata->addResourceSetReferenceProperty($stockEntityType, 'Item', $itemsResourceSet);
         $metadata->addResourceReferenceProperty($itemEntityType, 'Stock', $stocksResourceSet);
 
-        $metadata->addResourceSetReferenceProperty($reloadEntityType, 'Reload', $reloadsResourceSet);
+        $metadata->addResourceSetReferenceProperty($reloadEntityType, 'Item', $itemsResourceSet);
+        $metadata->addResourceReferenceProperty($itemEntityType, 'Reload', $reloadsResourceSet);
 
 
 
