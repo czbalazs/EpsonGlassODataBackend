@@ -16,7 +16,6 @@ class Stock {
     public $ProductID;
     public $Quantity;
     public $Items;   //ResourceSetReference
-
 }
 
 class Item {
@@ -26,7 +25,53 @@ class Item {
     public $Name;
     public $Description;
     public $Stock;   //ResourceReference
+    public $Orders;  //ResourceSetReference
+}
 
+class Reload {
+
+    public $ReloadID;
+    public $ProductID;
+    public $SupplierID;
+    public $Quantity;
+    public $Date;
+    public $Items;  //ResourceSetReference
+}
+
+class Order {
+
+    public $OrderID;
+    public $ProductID;
+    public $CustomerID;
+    public $Quantity;
+    public $Date;
+    public $Items;  //ResourceSetReference
+    public $User;   //ResourceReference
+    public $Customer; //ResourceReference
+    public $Supplier;  //ResourceReference
+}
+
+class User {
+
+    public $UserID;
+    public $Name;
+    public $Privilege;
+    public $Orders;  //ResourceSetReference
+}
+
+class Customer {
+
+    public $CustomerID;
+    public $Address;
+    public $Order;  //ResourceReference
+}
+
+class Supplier {
+
+    public $SupplierID;
+    public $Phone;
+    public $ContactName;
+    public $Order;  //ResourceReference
 }
 
 class CreateFictiveCompanyMetadata {
@@ -39,21 +84,31 @@ class CreateFictiveCompanyMetadata {
         $metadata->addKeyProperty($stockEntityType, 'StockID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($stockEntityType, 'ProductID', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($stockEntityType, 'Quantity', EdmPrimitiveType::INT32);
-        $stockResourceSet = $metadata->addResourceSet('Stocks', $stockEntityType);
+        $stocksResourceSet = $metadata->addResourceSet('Stocks', $stockEntityType);
 
-        $itemsEntityType = $metadata->addEntityType(new ReflectionClass('Item'), 'Item', 'FictiveCompany');
-        $metadata->addKeyProperty($itemsEntityType, 'ItemID', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($itemsEntityType, 'Barcode', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($itemsEntityType, 'Name', EdmPrimitiveType::STRING);
-        $metadata->addPrimitiveProperty($itemsEntityType, 'Description', EdmPrimitiveType::STRING);
-        $itemsResourceSet = $metadata->addResourceSet('Items', $itemsEntityType);
+        $itemEntityType = $metadata->addEntityType(new ReflectionClass('Item'), 'Item', 'FictiveCompany');
+        $metadata->addKeyProperty($itemEntityType, 'ItemID', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($itemEntityType, 'Barcode', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($itemEntityType, 'Name', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveProperty($itemEntityType, 'Description', EdmPrimitiveType::STRING);
+        $itemsResourceSet = $metadata->addResourceSet('Items', $itemEntityType);
+
+        $reloadEntityType = $metadata->addEntityType(new ReflectionClass('Reload'), 'Reload', 'FictiveCompany');
+        $metadata->addKeyProperty($reloadEntityType, 'ReloadID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($reloadEntityType, 'ProductID', EdmPrimitiveType::STRING);
+        $metadata->addPrimitiveType($reloadEntityType, 'SupplierID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($reloadEntityType, 'Quantity', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveType($reloadEntityType, 'Date', EdmPrimitiveType::STRING);
+        $reloadsResourceSet = $metadata->addResourceSet('Reloads', $reloadEntityType);
 
         /*
          * Defining relationships
          */
+        //TODO!!
+        $metadata->addResourceSetReferenceProperty($stockEntityType, 'Item', $itemsResourceSet);
+        $metadata->addResourceReferenceProperty($itemEntityType, 'Stock', $stocksResourceSet);
 
-        $metadata->addResourceSetReferenceProperty($itemsEntityType, 'Items', $stockResourceSet);
-        $metadata->addResourceSetReferenceProperty($stockEntityType, 'Stock', $stockResourceSet);
+        $metadata->addResourceSetReferenceProperty($reloadEntityType, 'Reload', $reloadsResourceSet);
 
 
 
