@@ -20,6 +20,7 @@ class Stock {
 
 class Item {
 
+    public $ItemID;
     public $ProductID;
     public $Barcode;
     public $Name;
@@ -87,7 +88,8 @@ class CreateFictiveCompanyMetadata {
         $stocksResourceSet = $metadata->addResourceSet('Stocks', $stockEntityType);
 
         $itemEntityType = $metadata->addEntityType(new ReflectionClass('Item'), 'Item', 'FictiveCompany');
-        $metadata->addKeyProperty($itemEntityType, 'ItemID', EdmPrimitiveType::INT+"");
+        $metadata->addKeyProperty($itemEntityType, 'ItemID', EdmPrimitiveType::INT32);
+        $metadata->addPrimitiveProperty($itemEntityType, 'ProductID', EdmPrimitiveType::INT32);
         $metadata->addPrimitiveProperty($itemEntityType, 'Barcode', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($itemEntityType, 'Name', EdmPrimitiveType::STRING);
         $metadata->addPrimitiveProperty($itemEntityType, 'Description', EdmPrimitiveType::STRING);

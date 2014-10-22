@@ -37,7 +37,13 @@ class FictiveCompanyQueryProvider implements IDataServiceQueryProvider {
     public function getResourceSet(ResourceSet $resourceSet)
     {
         $resourceSetName = $resourceSet->getName();
-        if ($resourceSetName !== 'Items' && $resourceSetName !== 'Stocks'){
+        if ($resourceSetName !== 'Items'
+            && $resourceSetName !== 'Stocks'
+            && $resourceSetName !== 'Reloads'
+            && $resourceSetName !== 'Orders'
+            && $resourceSetName !== 'Users'
+            && $resourceSetName !== 'Customers'
+            && $resourceSetName !== 'Suppliers'){
             die('(FictiveCompanyQueryProvider) Unknown resource set');
         }
 
@@ -49,11 +55,26 @@ class FictiveCompanyQueryProvider implements IDataServiceQueryProvider {
 
         $returnResult = array();
         switch ($resourceSetName) {
-            case 'Stock':
+            case 'Stocks':
                 $returnResult = $this->_serializeStocks($stmt);
                 break;
             case 'Items':
                 $returnResult = $this->_serializeItems($stmt);
+                break;
+            case 'Reloads':
+                $returnResult = $this->_serializeReloads($stmt);
+                break;
+            case 'Orders':
+                $returnResult = $this->_serializeOrders($stmt);
+                break;
+            case 'Users':
+                $returnResult = $this->_serializeUsers($stmt);
+                break;
+            case 'Customers':
+                $returnResult = $this->_serializeCustomers($stmt);
+                break;
+            case 'Suppliers':
+                $returnResult = $this->_serializeSuppliers($stmt);
                 break;
         }
 
@@ -76,6 +97,63 @@ class FictiveCompanyQueryProvider implements IDataServiceQueryProvider {
         $stock->ProductID = $record['ProductID'];
         $stock->Quantity = $record['Quantity'];
         return $stock;
+    }
+
+    public function _serializeItems($result){
+        $items = array();
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)){
+            $items[] = $this->_serializeItems($record);
+        }
+
+        return $items;
+    }
+
+    public function _serializeItem($record){
+        $item = new Item();
+        $item->ItemID = $record['ItemID'];
+        $item->ProductID = $record['ProductID'];
+        $item->Barcode = $record['Barcode'];
+        $item->Name = $record['Name'];
+        $item->Description = $record['Description'];
+        return $item;
+    }
+
+    public function  _serializeReloads($result){
+        $reloads = array();
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)){
+            $reloads[] = $this->_serializeReloads($record);
+        }
+
+        return $reloads;
+    }
+
+    public function _serializeReload($record){
+        $reload = new Reload();
+        $reload->ReloadID = $record['ReloadID'];
+        $reload->ProductID = $record['ProductID'];
+        $reload->SupplierID = $record['SupplierID'];
+        $reload->Quantity = $record['Quantity'];
+        $reload->Date = $record['Date'];
+        return $reload;
+    }
+
+    public function _serializeOrders($result){
+        $orders = array();
+        while ($record = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)){
+            $orders[] = $this->_serializeOrders($record);
+        }
+
+        return $orders;
+    }
+
+    public function _serializeOrder($record){
+        $order = new Order();
+        $order->OrderID = $order['OrderID'];
+        $order->ProductID = $order['ProductID'];
+        $order->CustomerID = $order['CustomerID'];
+        $order->Quantity = $order['Quantity'];
+        $order->Date = $order['Date'];
+        return $order;
     }
 
     public function getResourceFromResourceSet(ResourceSet $resourceSet,
